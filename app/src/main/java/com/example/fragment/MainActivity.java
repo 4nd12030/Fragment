@@ -2,7 +2,7 @@ package com.example.fragment;
 
 import android.os.Bundle;
 
-import com.google.android.material.snackbar.Snackbar;
+import androidx.fragment.app.Fragment;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 
+    boolean modoDia = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,11 +38,30 @@ public class MainActivity extends AppCompatActivity {
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
+        //Carga del Fragmento por defecto
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.contenedor, new ModoDiaFragment())
+                .commit();
+
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Fragment f = null;
+
+                if (modoDia) {
+                    f = new ModoNocheFragment();
+                } else {
+                    f = new ModoDiaFragment();
+                }
+
+                modoDia = !modoDia;
+
+                //CARGA DEL otro FRAGMENTO
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.contenedor, f)
+                        .commit();
             }
         });
     }
